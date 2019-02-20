@@ -12,16 +12,16 @@ describe('repo_actions', () => {
     store.clearActions()
   })
   test('dispatches the correct action and payload', () => {
+    const language = 'javascript'
     mockAxios.get.mockImplementationOnce(() => {
-      console.log('mock Axios')
-      return Promise.resolve({ data: 'testa' })
+      return Promise.resolve({ data: 'test' })
     })
-    return store.dispatch(repoActions.getTopRepos('javascript')).then(() => {
-      console.log(store.getActions())
+    return store.dispatch(repoActions.getTopRepos(language)).then(() => {
       const expectedActions = [
         { type: repoActions.GET_TOP_REPOS },
-        { type: repoActions.GET_TOP_REPOS_SUCCESS, payload: 'testa' }
+        { type: repoActions.GET_TOP_REPOS_SUCCESS, payload: 'test' }
       ]
+      expect(mockAxios.get).toBeCalledWith(`https://api.github.com/search/repositories?q=language:${language}&sort=stars&order=desc`)
       expect(store.getActions()).toEqual(expectedActions)
     })
   })
